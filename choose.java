@@ -30,6 +30,8 @@ public class choose {
 					tmp.start();
 				}else if(e.getSource().equals(subject)) {
 					f.dispose();
+					Subject tmp=new Subject();
+					tmp.start();
 				}else {
 					f.dispose();
 					INFORMATION tmp=new INFORMATION();
