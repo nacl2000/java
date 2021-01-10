@@ -5,18 +5,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 public class Subject implements ActionListener{
-	public JFrame f=new JFrame("学生信息管理");
+	public JFrame f=new JFrame("课程信息管理");
 	private JButton re=new JButton("返回");
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(re)) {
 			f.dispose();
-			start();
+			choose tmp=new choose();
+			tmp.start();
 		}
 	}
 	int tmp=0;
 	public void init() {
-		f=new JFrame("课程管理");
+		f=new JFrame("课程信息管理");
 		tmp++;
 		if(tmp==1) {
 			re.addActionListener(this);
@@ -27,137 +28,59 @@ public class Subject implements ActionListener{
 	}
 	public void start() {
 		init();
-		JButton add=new JButton("增加课程信息");
-		JButton update=new JButton("修改课程信息");
-		JButton delete=new JButton("删除课程信息");
-		JButton ret=new JButton("返回");
-		f.add(ret);
-		f.add(add);
+		//输入
+		JTextField sid=new JTextField(20);
+		JTextField name=new JTextField(20);
+		JTextField sex=new JTextField(20);
+		JTextField classnumber=new JTextField(20);
+		JTextField phone=new JTextField(20);
+		JTextField address=new JTextField(20);
+		
+		f.add(sid);
+		f.add(name);
+		f.add(sex);
+		f.add(classnumber);
+		f.add(phone);
+		f.add(address);
+		
+		sid.setBounds(180,40,150,20);
+		name.setBounds(180,80,150,20);
+		sex.setBounds(180,120,150,20);
+		classnumber.setBounds(180,160,150,20);
+		phone.setBounds(180,200,150,20);
+		//提示字
+		JLabel xuehao=new JLabel("课程名：");
+		JLabel xingming=new JLabel("班级：");
+		JLabel xingbie=new JLabel("教师：");
+		JLabel banji=new JLabel("第几周：");
+		JLabel shoujihao=new JLabel("第几节：");
+		
+		f.add(xingbie);
+		f.add(xuehao);
+		f.add(xingming);
+		f.add(banji);
+		f.add(shoujihao);
+		
+		xuehao.setBounds(130,40,150,20);
+		xingming.setBounds(130,80,150,20);
+		xingbie.setBounds(130,120,150,20);
+		banji.setBounds(130,160,150,20);
+		shoujihao.setBounds(130,200,150,20);
+		//按钮
+		JButton ad=new JButton("添加");
+		JButton update=new JButton("修改");
+		JButton delete=new JButton("删除");
+		JButton query=new JButton("查找");
+		f.add(ad);
+		f.add(query);
 		f.add(update);
 		f.add(delete);
-		class mylistener implements ActionListener{
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(e.getSource().equals(add)) {
-					f.dispose();
-					ADD();
-				}else if(e.getSource().equals(update)) {
-					f.dispose();
-					UPDATE();
-				}else if(e.getSource().equals(delete)){
-					f.dispose();
-					DELETE();
-				}else {
-					f.dispose();
-					INFORMATION tmp=new INFORMATION();
-					tmp.start();
-				}
-			}
-		}
-		ret.addActionListener(new mylistener());
-		ret.setBounds(210,300,80,30);
-		add.addActionListener(new mylistener());
-		delete.addActionListener(new mylistener());
-		update.addActionListener(new mylistener());
-		add.setBounds(60,120,110,110);
-		delete.setBounds(200,120,110,110);
-		update.setBounds(340,120,110,110);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void ADD() {
-		init();
-		//输入
-		JTextField name=new JTextField(20);
-		JTextField classnumber=new JTextField(20);
-		JTextField teacher=new JTextField(20);
-		
-		f.add(name);
-		f.add(classnumber);
-		f.add(teacher);
-		
-		name.setBounds(170,40,150,20);
-		classnumber.setBounds(170,120,150,20);
-		teacher.setBounds(170,200,150,20);
-		//提示字
-		JLabel kecheng=new JLabel("课程名：");
-		JLabel banji=new JLabel("班级：");
-		JLabel jiaoshi=new JLabel("教师：");
-		
-		f.add(kecheng);
-		f.add(banji);
-		f.add(jiaoshi);
-		
-		kecheng.setBounds(110,40,150,20);
-		banji.setBounds(110,120,150,20);
-		jiaoshi.setBounds(110,200,150,20);
-		//按钮
-		JButton accpet=new JButton("添加");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
+		ad.setBounds(30,300,80,30);
+		update.setBounds(120,300,80,30);
+		delete.setBounds(210,300,80,30);
+		query.setBounds(300,300,80,30);
 		f.add(re);
-		re.setBounds(300,300,100,30);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void UPDATE() {
-		init();
-		//输入
-		JTextField name=new JTextField(20);
-		JTextField classnumber=new JTextField(20);
-		JTextField teacher=new JTextField(20);
-		
-		f.add(name);
-		f.add(classnumber);
-		f.add(teacher);
-		
-		name.setBounds(170,40,150,20);
-		classnumber.setBounds(170,120,150,20);
-		teacher.setBounds(170,200,150,20);
-		//提示字
-		JLabel kecheng=new JLabel("课程名：");
-		JLabel banji=new JLabel("班级：");
-		JLabel jiaoshi=new JLabel("教师：");
-		
-		f.add(kecheng);
-		f.add(banji);
-		f.add(jiaoshi);
-		
-		kecheng.setBounds(110,40,150,20);
-		banji.setBounds(110,120,150,20);
-		jiaoshi.setBounds(110,200,150,20);
-		//按钮
-		JButton accpet=new JButton("确认修改");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
-		f.add(re);
-		re.setBounds(300,300,100,30);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void DELETE() {
-		init();
-		JTextField classnumber=new JTextField(20);
-		JTextField name=new JTextField(20);
-		f.add(name);
-		f.add(classnumber);
-		name.setBounds(170,200,150,20);
-		classnumber.setBounds(170,100,150,20);
-		//提示字
-		JLabel banji=new JLabel("班级：");
-		JLabel kecheng=new JLabel("课程：");
-		f.add(banji);
-		f.add(kecheng);
-		banji.setBounds(110,100,150,20);
-		kecheng.setBounds(110,200,150,20);
-		//按钮
-		JButton accpet=new JButton("确认删除");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
-		f.add(re);
-		re.setBounds(300,300,100,30);
+		re.setBounds(390,300,80,30);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}

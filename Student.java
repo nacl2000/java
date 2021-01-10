@@ -2,21 +2,29 @@ package 课设;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 import javax.swing.*;
 public class Student implements ActionListener{
 	public JFrame f=new JFrame("学生信息管理");
 	private JButton re=new JButton("返回");
+	static private String UTR = "jdbc:mysql://127.0.0.1:3306/课设?"
+			+ "useSSL=false&serverTimezone=UTC&characterEncoding=UTF8";
+	static private String NAME = "root";
+	static private String PASSWORD = "jhy,.jht";
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(re)) {
 			f.dispose();
-			start();
+			choose tmp=new choose();
+			tmp.start();
 		}
 	}
 	int tmp=0;
 	public void init() {
-		f=new JFrame("成绩管理");
+		f=new JFrame("学生信息管理");
 		tmp++;
 		if(tmp==1) {
 			re.addActionListener(this);
@@ -27,171 +35,158 @@ public class Student implements ActionListener{
 	}
 	public void start() {
 		init();
-		JButton add=new JButton("增加学生信息");
-		JButton update=new JButton("修改学生信息");
-		JButton delete=new JButton("删除学生信息");
-		JButton ret=new JButton("返回");
-		f.add(ret);
-		f.add(add);
+		//输入
+		JTextField sid=new JTextField(20);
+		JTextField name=new JTextField(20);
+		JTextField sex=new JTextField(20);
+		JTextField classnumber=new JTextField(20);
+		JTextField phone=new JTextField(20);
+		JTextField address=new JTextField(20);
+		
+		f.add(sid);
+		f.add(name);
+		f.add(sex);
+		f.add(classnumber);
+		f.add(phone);
+		f.add(address);
+		
+		sid.setBounds(80,40,150,20);
+		name.setBounds(80,80,150,20);
+		sex.setBounds(80,120,150,20);
+		classnumber.setBounds(310,40,150,20);
+		phone.setBounds(310,80,150,20);
+		address.setBounds(310,120,150,20);
+		//提示字
+		JLabel xuehao=new JLabel("学号：");
+		JLabel xingming=new JLabel("姓名：");
+		JLabel xingbie=new JLabel("性别：");
+		JLabel banji=new JLabel("班级：");
+		JLabel shoujihao=new JLabel("手机号：");
+		JLabel zhuzhi=new JLabel("住址：");
+		
+		f.add(xingbie);
+		f.add(xuehao);
+		f.add(xingming);
+		f.add(banji);
+		f.add(shoujihao);
+		f.add(zhuzhi);
+		
+		xuehao.setBounds(30,40,150,20);
+		xingming.setBounds(30,80,150,20);
+		xingbie.setBounds(30,120,150,20);
+		banji.setBounds(260,40,150,20);
+		shoujihao.setBounds(260,80,150,20);
+		zhuzhi.setBounds(260,120,150,20);
+		//按钮
+		JButton ad=new JButton("添加");
+		JButton update=new JButton("修改");
+		JButton delete=new JButton("删除");
+		JButton query=new JButton("查找");
+		f.add(ad);
+		f.add(query);
 		f.add(update);
 		f.add(delete);
+		ad.setBounds(30,300,80,30);
+		update.setBounds(120,300,80,30);
+		delete.setBounds(210,300,80,30);
+		query.setBounds(300,300,80,30);
+		f.add(re);
+		re.setBounds(390,300,80,30);
+		//事件
+//		f.add(sid);
+//		f.add(name);
+//		f.add(sex);
+//		f.add(classnumber);
+//		f.add(phone);
+//		f.add(address);
 		class mylistener implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(e.getSource().equals(add)) {
-					f.dispose();
-					ADD();
+				if(e.getSource().equals(ad)) {
+					try{//加载驱动
+			            Class.forName("com.mysql.cj.jdbc.Driver");//加载驱动
+			            Connection coon = DriverManager.getConnection(UTR,NAME,PASSWORD);//创建连接对象
+			            if(sid.getText()==null||name.getText()==null||sex.getText()==null||classnumber.getText()==null||
+			            				phone.getText()==null||address.getText()==null) {
+			            	JOptionPane.showMessageDialog(null, "信息未填写完整", "出错啦",
+									JOptionPane.ERROR_MESSAGE);
+			            	coon.close();
+			            	return;
+			            }
+			            String []ss=new String [10];
+			            ss[0]=sid.getText();
+			            ss[1]=name.getText();
+			            ss[2]=sex.getText();
+			            ss[3]=classnumber.getText();
+			            ss[4]=phone.getText();
+			            ss[5]=address.getText();
+			            String sql=" INSERT  INTO  student   VALUES  ('"+ss[0]+"','"+ss[1]+"','"+ss[2]+"','"+ss[3]+"','"+ss[4]+"','"+ss[5]+"')"; 
+			            Statement stmt = coon.createStatement();
+			            int  result = stmt.executeUpdate(sql);
+			            System.out.print(result);
+			            coon.close();
+			            stmt.close();
+			        }catch (Exception e1){
+			            e1.printStackTrace();
+			        }
+				}else if(e.getSource().equals(query)) {
+					
 				}else if(e.getSource().equals(update)) {
-					f.dispose();
-					UPDATE();
-				}else if(e.getSource().equals(delete)){
-					f.dispose();
-					DELETE();
+					try{//加载驱动
+			            Class.forName("com.mysql.cj.jdbc.Driver");//加载驱动
+			            Connection coon = DriverManager.getConnection(UTR,NAME,PASSWORD);//创建连接对象
+			            if(sid.getText()==null||name.getText()==null||sex.getText()==null||classnumber.getText()==null||
+	            				phone.getText()==null||address.getText()==null) {
+			            		JOptionPane.showMessageDialog(null, "信息未填写完整", "出错啦",
+							JOptionPane.ERROR_MESSAGE);
+			            	coon.close();
+			            	return;
+			            }
+			            String []ss=new String [10];
+			            ss[0]=sid.getText();
+			            ss[1]=name.getText();
+			            ss[2]=sex.getText();
+			            ss[3]=classnumber.getText();
+			            ss[4]=phone.getText();
+			            ss[5]=address.getText();
+			            String sql=" UPDATE student SET name='"+ss[1]+"',sex='"+ss[2]+"',classnumber='"+ss[3]+"',phone='"+ss[4]+"', "
+			            		+ " address='"+ss[5]+"' where sid='"+ss[0]+"' ";
+			            Statement stmt = coon.createStatement();
+			            int  result = stmt.executeUpdate(sql);
+			            System.out.print(result);
+			            coon.close();
+			            stmt.close();
+			        }catch (Exception e1){
+			            e1.printStackTrace();
+			        }
 				}else {
-					f.dispose();
-					INFORMATION tmp=new INFORMATION();
-					tmp.start();
+					try{//加载驱动
+			            Class.forName("com.mysql.cj.jdbc.Driver");//加载驱动
+			            Connection coon = DriverManager.getConnection(UTR,NAME,PASSWORD);//创建连接对象
+			            if(sid.getText()==null) {
+			            	JOptionPane.showMessageDialog(null, "学号不能为空", "出错啦",
+									JOptionPane.ERROR_MESSAGE);
+			            	coon.close();
+			            	return;
+			            }
+			            String ss=sid.getText();
+			            String sql="delete from student where sid='"+ss+"'"; 
+			            Statement stmt = coon.createStatement();
+			            int  result = stmt.executeUpdate(sql);
+			            System.out.print(result);
+			            coon.close();
+			            stmt.close();
+			        }catch (Exception e1){
+			            e1.printStackTrace();
+			        }
 				}
 			}
 		}
-		ret.addActionListener(new mylistener());
-		ret.setBounds(210,300,80,30);
-		add.addActionListener(new mylistener());
+		ad.addActionListener(new mylistener());
 		delete.addActionListener(new mylistener());
 		update.addActionListener(new mylistener());
-		add.setBounds(60,120,110,110);
-		delete.setBounds(200,120,110,110);
-		update.setBounds(340,120,110,110);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void ADD() {
-		init();
-		//输入
-		JTextField sid=new JTextField(20);
-		JTextField name=new JTextField(20);
-		JTextField sex=new JTextField(20);
-		JTextField classnumber=new JTextField(20);
-		JTextField phone=new JTextField(20);
-		JTextField address=new JTextField(20);
-		
-		f.add(sid);
-		f.add(name);
-		f.add(sex);
-		f.add(classnumber);
-		f.add(phone);
-		f.add(address);
-		
-		sid.setBounds(170,40,150,20);
-		name.setBounds(170,80,150,20);
-		sex.setBounds(170,120,150,20);
-		classnumber.setBounds(170,160,150,20);
-		phone.setBounds(170,200,150,20);
-		address.setBounds(170,240,150,20);
-		//提示字
-		JLabel xuehao=new JLabel("学号：");
-		JLabel xingming=new JLabel("姓名：");
-		JLabel xingbie=new JLabel("性别：");
-		JLabel banji=new JLabel("班级：");
-		JLabel shoujihao=new JLabel("手机号：");
-		JLabel zhuzhi=new JLabel("住址：");
-		
-		f.add(xingbie);
-		f.add(xuehao);
-		f.add(xingming);
-		f.add(banji);
-		f.add(shoujihao);
-		f.add(zhuzhi);
-		
-		xuehao.setBounds(110,40,150,20);
-		xingming.setBounds(110,80,150,20);
-		xingbie.setBounds(110,120,150,20);
-		banji.setBounds(110,160,150,20);
-		shoujihao.setBounds(110,200,150,20);
-		zhuzhi.setBounds(110,240,150,20);
-		//按钮
-		JButton accpet=new JButton("添加");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
-		f.add(re);
-		re.setBounds(300,300,100,30);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void UPDATE() {
-		init();
-		//输入
-		JTextField sid=new JTextField(20);
-		JTextField name=new JTextField(20);
-		JTextField sex=new JTextField(20);
-		JTextField classnumber=new JTextField(20);
-		JTextField phone=new JTextField(20);
-		JTextField address=new JTextField(20);
-		
-		f.add(sid);
-		f.add(name);
-		f.add(sex);
-		f.add(classnumber);
-		f.add(phone);
-		f.add(address);
-		
-		sid.setBounds(170,40,150,20);
-		name.setBounds(170,80,150,20);
-		sex.setBounds(170,120,150,20);
-		classnumber.setBounds(170,160,150,20);
-		phone.setBounds(170,200,150,20);
-		address.setBounds(170,240,150,20);
-		//提示字
-		JLabel xuehao=new JLabel("学号：");
-		JLabel xingming=new JLabel("姓名：");
-		JLabel xingbie=new JLabel("性别：");
-		JLabel banji=new JLabel("班级：");
-		JLabel shoujihao=new JLabel("手机号：");
-		JLabel zhuzhi=new JLabel("住址：");
-		
-		f.add(xingbie);
-		f.add(xuehao);
-		f.add(xingming);
-		f.add(banji);
-		f.add(shoujihao);
-		f.add(zhuzhi);
-		
-		xuehao.setBounds(110,40,150,20);
-		xingming.setBounds(110,80,150,20);
-		xingbie.setBounds(110,120,150,20);
-		banji.setBounds(110,160,150,20);
-		shoujihao.setBounds(110,200,150,20);
-		zhuzhi.setBounds(110,240,150,20);
-		//按钮
-		JButton accpet=new JButton("确认修改");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
-		f.add(re);
-		re.setBounds(300,300,100,30);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	public void DELETE() {
-		init();
-		JTextField sid=new JTextField(20);
-		
-		f.add(sid);
-		
-		sid.setBounds(170,150,150,20);
-		//提示字
-		JLabel xuehao=new JLabel("学号：");
-
-		f.add(xuehao);
-		
-		xuehao.setBounds(110,150,150,20);
-		//按钮
-		JButton accpet=new JButton("确认删除");
-		f.add(accpet);
-		accpet.setBounds(100,300,100,30);
-		f.add(re);
-		re.setBounds(300,300,100,30);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
