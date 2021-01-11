@@ -4,9 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 public class Teacher implements ActionListener{
 	public JFrame f=new JFrame("教师信息管理");
 	static private String UTR = "jdbc:mysql://127.0.0.1:3306/课设?"
@@ -91,6 +93,12 @@ public class Teacher implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String []ss=new String [10];
+	            ss[0]=tid.getText();
+	            ss[1]=name.getText();
+	            ss[2]=sex.getText();
+	            ss[3]=phone.getText();
+	            ss[4]=address.getText();
 				// TODO Auto-generated method stub
 				if(e.getSource().equals(ad)) {
 					try{//加载驱动
@@ -103,12 +111,7 @@ public class Teacher implements ActionListener{
 			            	coon.close();
 			            	return;
 			            }
-			            String []ss=new String [10];
-			            ss[0]=tid.getText();
-			            ss[1]=name.getText();
-			            ss[2]=sex.getText();
-			            ss[3]=phone.getText();
-			            ss[4]=address.getText();
+			            
 			            String sql=" INSERT  INTO  teacher   VALUES  ('"+ss[0]+"','"+ss[1]+"','"+ss[2]+"','"+ss[3]+"','"+ss[4]+"')"; 
 			            Statement stmt = coon.createStatement();
 			            int  result = stmt.executeUpdate(sql);
@@ -119,7 +122,64 @@ public class Teacher implements ActionListener{
 			            e1.printStackTrace();
 			        }
 				}else if(e.getSource().equals(query)) {
-					
+					try {
+						Class.forName("com.mysql.cj.jdbc.Driver");
+						Connection coon = DriverManager.getConnection(UTR,NAME,PASSWORD);//创建连接对象
+						String sql=" select * from teacher "
+		            			+ " where tid='"+ss[0]+"' ";
+		            	Statement stmt = coon.createStatement();
+		            	ResultSet rs = stmt.executeQuery(sql);
+	            		JFrame tmp = new JFrame("查询");
+	            		tmp.setSize(800,600);
+	            		tmp.setLocation(600,00);
+		            	int count = 0;
+		            	while(rs.next()){
+		            		count++;
+		            	}
+		            	Object[][] info = new Object[count][6];
+		            	count = 0;
+		            	rs = stmt.executeQuery(sql);
+		            	while(rs.next()){
+		            		info[count][0] = rs.getString("tid");
+		            		info[count][1] = rs.getString("name");
+		            		info[count][2] = rs.getString("sex");
+		            		info[count][3] = rs.getString("phone");
+		            		info[count][4] = rs.getString("address");
+		            		count++;
+		            	}
+		            	String[] title = {"教师号","姓名","性别", "电话", "地址"};
+		            	JScrollPane scroll=new JScrollPane();//创建滚动容器
+		            	JTable jtable=null;//创建表格	
+		            	DefaultTableModel model = new DefaultTableModel(info, title);
+		            	jtable = new JTable(model);
+		            	jtable.setBackground(Color.cyan);
+		            	jtable.setPreferredScrollableViewportSize(new Dimension(100, 80));
+		            	jtable.setFillsViewportHeight(true);
+		            	
+		            	JScrollPane jScrollPane = new JScrollPane();
+		                jScrollPane.setViewportView(jtable);
+		                Font font = new Font("宋体", Font.BOLD, 13);
+
+		                //添加label
+		                JLabel label =new JLabel("查询数据库中的数据");
+		                label.setFont(font);
+		                label.setBounds(1,10,240,30);
+
+		                //通过panel组合button，label
+		                JPanel panel =new JPanel();
+		                panel.setBackground(Color.GRAY);
+		                panel.setSize(200,100);
+		                panel.add(label);
+//		                panel.add(button);
+
+		                //6，添加表格、滚动条到容器中
+		                tmp.add(panel, BorderLayout.NORTH);
+		                tmp.setVisible(true);
+		                tmp.add(jScrollPane,BorderLayout.CENTER);
+	                    tmp.setVisible(true);
+					}catch(Exception e1) {
+						e1.printStackTrace();
+					}
 				}else if(e.getSource().equals(update)) {
 					try{//加载驱动
 			            Class.forName("com.mysql.cj.jdbc.Driver");//加载驱动
@@ -131,12 +191,7 @@ public class Teacher implements ActionListener{
 			            	coon.close();
 			            	return;
 			            }
-			            String []ss=new String [10];
-			            ss[0]=tid.getText();
-			            ss[1]=name.getText();
-			            ss[2]=sex.getText();
-			            ss[3]=phone.getText();
-			            ss[4]=address.getText();
+			           
 			            String sql=" UPDATE teacher SET name='"+ss[1]+"',sex='"+ss[2]+"',phone='"+ss[3]+"',address='"+ss[4]+"' "
 			            		+ "where tid='"+ss[0]+"' ";
 			            Statement stmt = coon.createStatement();
@@ -157,8 +212,8 @@ public class Teacher implements ActionListener{
 			            	coon.close();
 			            	return;
 			            }
-			            String ss=tid.getText();
-			            String sql="delete from teacher where tid='"+ss+"'"; 
+			            String sss=tid.getText();
+			            String sql="delete from teacher where tid='"+sss+"'"; 
 			            Statement stmt = coon.createStatement();
 			            int  result = stmt.executeUpdate(sql);
 			            System.out.print(result);
@@ -173,6 +228,7 @@ public class Teacher implements ActionListener{
 		ad.addActionListener(new mylistener());
 		delete.addActionListener(new mylistener());
 		update.addActionListener(new mylistener());
+		query.addActionListener(new mylistener());
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
