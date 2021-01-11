@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +17,19 @@ public class Teacher implements ActionListener{
 	static private String NAME = "root";
 	static private String PASSWORD = "jhy,.jht";
 	private JButton re=new JButton("返回");
+	 public static boolean judgeTeacher(String tid, String name, String sex, String phone, String address) {
+	        if (tid == "" || name == "" || sex == "" ||  phone == "" || address == "") return false;
+	        if (!isDig(tid)) return false;
+	        if (!isDig(phone)) return  false;
+	        if (sex.charAt(0) != '男' && sex.charAt(0) != '女') return  false;
+	        if (sex.length() > 1) return  false;
+	        if (phone.length() != 11) return false;
+	        return true;
+	    }
+	    public static boolean isDig(String s) {
+	        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+	        return pattern.matcher(s).matches();
+	    }
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(re)) {
@@ -99,6 +113,11 @@ public class Teacher implements ActionListener{
 	            ss[2]=sex.getText();
 	            ss[3]=phone.getText();
 	            ss[4]=address.getText();
+	            if(!judgeTeacher(ss[0],ss[1],ss[2],ss[3],ss[4])) {
+	            	JOptionPane.showMessageDialog(null, "信息未填写正确", "出错啦",
+							JOptionPane.ERROR_MESSAGE);
+	            	return;
+	            }
 				// TODO Auto-generated method stub
 				if(e.getSource().equals(ad)) {
 					try{//加载驱动

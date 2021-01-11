@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,18 @@ public class Subject implements ActionListener{
 			choose tmp=new choose();
 			tmp.start();
 		}
+	}
+	public static boolean judgeSubject(String sname, String classnumber, String tea, String weekday, String time) {
+	        if (sname == "" || classnumber == "" || tea == "" ||  weekday == "" || time == "" ) return false;
+	        if (time.length() > 1) return false;
+	        if (weekday.length() != 2) return  false;
+	        if (!isDig(weekday)) return false;
+	        if (!isDig(time)) return false;
+	        return true;
+	}
+	public static boolean isDig(String s) {
+	        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+	        return pattern.matcher(s).matches();
 	}
 	int tmp=0;
 	public void init() {
@@ -105,6 +118,12 @@ public class Subject implements ActionListener{
 	            	ss[2]=tea.getText();
 	            	ss[3]=week.getText();
 	            	ss[4]=jie.getText();
+	            	if(!judgeSubject(ss[0],ss[1],ss[2],ss[3],ss[4])) {
+	            		JOptionPane.showMessageDialog(null, "信息未填写正确", "出错啦",
+								JOptionPane.ERROR_MESSAGE);
+	            		coon.close();
+		            	return;
+	            	}
 		            if(e.getSource().equals(ad)) {
 		            	String sql="insert into subject values ('"+ss[0]+"','"+ss[1]+"','"+ss[2]+"','"+ss[3]+"',"
 		            			+ " '"+ss[4]+"') ";

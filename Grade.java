@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.regex.Pattern;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,6 +24,18 @@ public class Grade implements ActionListener{
 	private JTableHeader jth;
 	private JTable tabDemo;
 	private JButton btnShow;
+	  public static boolean judgeGrade(String sid, String sub, String grade) {
+	        if (sid == "" || sub == "" || grade == "") return false;
+	        if (!isDig(sid)) return false;
+	        if (!isDig(grade)) return  false;
+	        int k = Integer.valueOf(grade).intValue();
+	        if (k > 100 || k < 0) return false;
+	        return true;
+	    }
+	    public static boolean isDig(String s) {
+	        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+	        return pattern.matcher(s).matches();
+	    }
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(re)) {
@@ -87,7 +101,7 @@ public class Grade implements ActionListener{
 		re.setBounds(390,300,80,30);
 		//事务
 		class mylistener implements ActionListener{
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -98,6 +112,12 @@ public class Grade implements ActionListener{
 	            	ss[0]=sid.getText();
 	            	ss[1]=sub.getText();
 	            	ss[2]=core.getText();
+	            	if(!judgeGrade(ss[0],ss[1],ss[2])) {
+	            		coon.close();
+	            		JOptionPane.showMessageDialog(null, "信息未填写正确", "出错啦",
+								JOptionPane.ERROR_MESSAGE);
+		            	return;
+	            	}
 		            if(e.getSource().equals(ad)) {
 		            	String sql="insert into grade values ('"+ss[0]+"','"+ss[1]+"','"+ss[2]+"') ";
 		            	Statement stmt = coon.createStatement();

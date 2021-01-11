@@ -6,10 +6,29 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 public class Student implements ActionListener{
+	public static boolean judge(String sid, String name, String sex, String classnumber, String phone, String address) {
+        if (sid == "" || name == "" || sex == "" || classnumber == "" || phone == "" || address == "") return false;
+
+        if (!isDig(sid)) return false;
+        if (!isDig(phone)) return  false;
+        if (sex.charAt(0) != '男' && sex.charAt(0) != '女') return  false;
+        if (sex.length() > 1) return  false;
+        if (classnumber.charAt(0) != '初' && classnumber.charAt(0) != '高') return  false;
+        if (phone.length() != 11) return false;
+        if (!Character.isDigit(classnumber.charAt(2))) return  false;
+        if (classnumber.charAt(classnumber.length() - 1) != '班') return false;
+        return true;
+    }
+    public static boolean isDig(String s) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(s).matches();
+    }
 	public JFrame f=new JFrame("学生信息管理");
 	private JButton re=new JButton("返回");
 	static private String UTR = "jdbc:mysql://127.0.0.1:3306/课设?"
@@ -113,6 +132,11 @@ public class Student implements ActionListener{
 	            ss[3]=classnumber.getText();
 	            ss[4]=phone.getText();
 	            ss[5]=address.getText();
+	            if(!judge(ss[0],ss[1],ss[2],ss[3],ss[4],ss[5])) {
+	            	JOptionPane.showMessageDialog(null, "信息未填写正确", "出错啦",
+							JOptionPane.ERROR_MESSAGE);
+	            	return;
+	            }
 				if(e.getSource().equals(ad)) {
 					try{//加载驱动
 			            Class.forName("com.mysql.cj.jdbc.Driver");//加载驱动
